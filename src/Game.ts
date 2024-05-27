@@ -38,7 +38,7 @@ class Game{
 
     play(){
 
-debugger
+
         console.log(Constants.INTRODUCTION);
 
         let userChoice: string = Constants.EMPTY_PLACE;
@@ -50,6 +50,8 @@ debugger
         while(!this.board.end()){
 
             console.log( this.board.toString( this.player ) );
+
+            HelpingFunctions.printSteps(this.board);
 
 
             HelpingFunctions.getTurn(this.player);
@@ -71,6 +73,7 @@ debugger
 
             }
 
+
             this.reachablePositionsAfterEating = [];
 
             userChoice = userChoice.toLocaleLowerCase().trim();
@@ -88,13 +91,6 @@ debugger
                 this.player = HelpingFunctions.changePlayer(this.player);
                 
             }
-            else if( userChoice === Constants.HISTORY ){
-
-
-                console.log(this.board.getHistory().showStepHistry());
-
-
-            }
             else if(Validations.validMoveUndo(userChoice, this.board, this.player) ){
 
                 HelpingFunctions.undoMove(userChoice, this.board);
@@ -109,7 +105,7 @@ debugger
             }else{
 
                 if(recursiveMove || HelpingFunctions.possibleMove
-                    (this.board, userChoice, false)){
+                    (this.board, userChoice, false,  this.player)){
 
                     this.reachablePositionsAfterEating = Move.move(userChoice, this.board);
 
@@ -133,10 +129,10 @@ debugger
 
 
             recursiveMove = false;
+
         }
 
         HelpingFunctions.finalWordsToSayToPlayers(userChoice, this.player);
-
 
     }
 

@@ -71,7 +71,7 @@ class Validations{
 
         let chosenBoard = board.getHistory().getBoardHistory()[parseInt(stepIndex)-1];
         
-        let move = new Move(board.getHistory().getSteps()[parseInt(stepIndex)-1]);
+        let move = new Move(Object.keys(board.getHistory().getSteps()[parseInt(stepIndex)-1])[0]);
 
         let row = move.getStart().getRow();
 

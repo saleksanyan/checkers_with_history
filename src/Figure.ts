@@ -1,5 +1,4 @@
 import Position from './Position';
-import Move from './Move';
 import Board from "./Board";
 
 

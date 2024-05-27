@@ -15,9 +15,8 @@ class Constants{
     public static readonly EXIT = 'e'
 
 
-    public static readonly HISTORY = 'h';
-
     public static readonly BYE = '\nBYE!';
+
 
     public static readonly WHITE_WON = "\nWhite won!";
 
@@ -47,11 +46,14 @@ class Constants{
 
     public static readonly BLACK_TURN = "\nBlack's turn\n";
 
-    public static readonly INTRODUCTION  = "Hi there! Lets start the game and first will be white's turn. "
 
+    public static readonly INTRODUCTION  = "Hi there! Lets start the game and "+
+    "first will be white's turn. "
+
+    
     public static readonly ASKING_FOR_A_MOVE = "What do you want to do? "
-    + "\nEXAMPLE OF MOVE A3B4, H(history), U( EXAMPLE OF UNDO u1, UNDOING MOVE BY GIVING THEIR INDEX))"+
-     "\nIF YOU WANT TO EXIT ENTER E/e: ";
+    + "\nEXAMPLE OF MOVE A3B4, U( EXAMPLE OF UNDO u1, UNDOING MOVE BY GIVING THEIR INDEX))"+
+    "\nIF YOU WANT TO EXIT ENTER E/e: ";
 
 
     public static readonly ASKING_FOR_RECURSIVE_MOVE = "You have one more step do " 

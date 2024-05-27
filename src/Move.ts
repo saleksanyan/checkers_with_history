@@ -71,9 +71,8 @@ class Move{
 
         let boardHistory = board.getHistory();
 
-        boardHistory.addBoardHistory(HelpingFunctions.deepCopyMatrix(board.getBoard()));
 
-        boardHistory.addStepHistory(move);
+        boardHistory.addBoardHistory(HelpingFunctions.deepCopyMatrix(board.getBoard()));
 
         
         let eat = HelpingFunctions.deleteAllfiguresBetweenGivenPositions(startPos, destPos, board);
@@ -86,6 +85,7 @@ class Move{
 
         if(figure instanceof Figure){
 
+            boardHistory.addStepHistory( move, figure.getColor() );
 
             if(eat){
 

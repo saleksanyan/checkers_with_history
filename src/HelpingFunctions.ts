@@ -108,15 +108,64 @@ class HelpingFunctions{
 
     private static decrementCounter(board: Board, row: number, column:number){
 
-        if(board.getBoard()[row][column] === Constants.BLACK){
+        let figure = board.getBoard()[row][column];
 
-            board.decrementBlackCounter();
-            
-        }else{
+        if(figure instanceof Figure){
 
-            board.decrementWhiteCounter();
+            if(figure.getColor() === Constants.BLACK){
+
+                board.decrementBlackCounter();
+                
+            }else{
+
+                board.decrementWhiteCounter();
+
+            }
 
         }
+
+    }
+
+
+    public static changeCountOfFigures( board: Board): void {
+
+        let whites = 0;
+
+        let blacks = 0;
+
+        let checkersBoard = board.getBoard()
+
+        for (let row = 0; row < Constants.ROWS; row++) {
+
+
+            for (let column = 0; column < Constants.COLUMNS; column++) {
+                
+                let figure = checkersBoard[row][column];
+
+                if(figure instanceof Figure){
+
+                    if(figure.getColor() === Constants.BLACK){
+
+                        blacks++;
+                        
+                    }else{
+        
+                        whites++;
+        
+                    }
+        
+
+                }
+
+
+            }
+            
+
+        }
+
+        board.setBlackCount(blacks);
+
+        board.setWhiteCount(whites);
 
     }
 
@@ -150,14 +199,22 @@ class HelpingFunctions{
 
 
     public static getTurn(player: string){
+
+
         if(player === Constants.WHITE){
-            console.log(Constants.WHITE_TURN);
+        
+            console.log( Constants.WHITE_TURN );
+        
         }
-        else{console.log(Constants.BLACK_TURN);}
+        
+        else{ console.log( Constants.BLACK_TURN ); }
     }
 
 
-    public static possibleMove(board: Board, move: string, afterEating: boolean): boolean{
+
+
+
+    public static possibleMove(board: Board, move: string, afterEating: boolean, playerColor: string): boolean{
 
         let m = new Move(move);
 
@@ -173,7 +230,11 @@ class HelpingFunctions{
 
         if(figure instanceof Figure){
 
-            reachablePositions = figure.reachablePositions(start, board, afterEating);
+            if(figure.getColor() === playerColor){
+
+                reachablePositions = figure.reachablePositions(start, board, afterEating);
+            
+            }else return false;
 
         }
 
@@ -239,7 +300,9 @@ class HelpingFunctions{
 
         history.setBoardHistory(boardHistory.slice(0,index));
 
-        history.setStepHistory(stepHistory.slice(0,index));
+        history.setStepHistory(stepHistory.slice(0,index-1));
+
+        HelpingFunctions.changeCountOfFigures(board);
 
     }
 
@@ -293,9 +356,13 @@ class HelpingFunctions{
     }
 
 
+    public static printSteps(board: Board){
 
+        console.log(board.getHistory().showStepHistry());
 
+    }
 
 
 }
+
 export default HelpingFunctions;

@@ -42,6 +42,7 @@ class Board{
     }
 
 
+
     decrementBlackCounter(){
 
         this.blackCounter--;
@@ -49,8 +50,24 @@ class Board{
     }
 
 
+    setWhiteCount( count: number ){
+
+        this.whiteCounter = count;
+    
+    }
+
+
+    setBlackCount( count: number ){
+    
+        this.blackCounter = count;
+    
+    }
+
+    
     setBoard( newBoard: (string | Figure)[][] ){
+    
         this.matrix = newBoard;
+    
     }
 
     getBoard(){
@@ -60,7 +77,9 @@ class Board{
     }
 
     getHistory(){
+    
         return this.history;
+    
     }
 
     
