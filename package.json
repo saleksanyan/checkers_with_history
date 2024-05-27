@@ -1,0 +1,19 @@
+{
+  "name": "checkers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Start.js",
+  "scripts": {
+    "start": "node ./dist/Start.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "readline-sync": "^1.4.10"
+  },
+  "devDependencies": {
+    "@types/readline-sync": "^1.4.8"
+  }
+}
