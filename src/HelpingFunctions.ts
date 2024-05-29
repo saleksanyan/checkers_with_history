@@ -278,7 +278,7 @@ class HelpingFunctions{
    
         boardPlate[newRow][newColumn] = temp;
    
-        boardPlate[row][column] = ' ';
+        boardPlate[row][column] = Constants.EMPTY_PLACE;
    
         HelpingFunctions.becomeQueen(newRow,newColumn, board);
 

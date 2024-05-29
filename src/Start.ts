@@ -9,5 +9,5 @@ class Start{
 
 }
 
-let start =  new Start();
+new Start();
 
