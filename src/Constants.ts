@@ -1,33 +1,33 @@
-class Constants{
-    
-    public static readonly WHITE = 'w';
+export enum Color {
+	WHITE = "w",
+	BLACK = "b",
+	EMPTY_PLACE = " ",
+}
 
-    public static readonly BLACK = 'b';
+export enum GameStatus {
+	EXIT = "e",
+	BYE = "\nBYE!",
+	WHITE_WON = "\nWhite won!",
+	BLACK_WON = "\nBlack won!",
+	WHITE_TURN = "\nWhite's turn\n",
+	BLACK_TURN = "\nBlack's turn\n",
+	INTRODUCTION = "Hi there! Let's start the game and first will be white's turn.",
+	GET_FIGUR_POSITION = "Enter the figure's position that you want to play with: ",
+	GET_NEXT_STEP = "Choose position that you want to go: ",
+    UNDO = 'u',
+}
 
-    public static readonly EMPTY_PLACE = ' ';
+export enum BoardConstants {
+	COLUMNS = 8,
+	ROWS = 8,
+	MOVE_LENGTH = 4,
+	HISTORY_CHECK_LENGTH = 2,
+}
 
-    public static readonly COLUMNS = 8;
-
-    public static readonly ROWS = 8;
-
-    public static readonly NO_MOVE = 'n'
-
-    public static readonly EXIT = 'e'
-
-
-    public static readonly BYE = '\nBYE!';
-
-
-    public static readonly WHITE_WON = "\nWhite won!";
-
-
-    public static readonly BlACK_WON = "\nBlack won!";
-
-
-    public static readonly MOVE_LENGTH = 4;
-
-    public static readonly HISTORY_CHECK_LENGTH = 2;
-
+export class Constants {
+    public static readonly Color = Color;
+    public static readonly GameStatus = GameStatus;
+    public static readonly BoardConstants = BoardConstants;
 
     public static readonly LETTERS_TO_COLUMNS: { [key: string]: number } = {
         a: 0,
@@ -37,28 +37,10 @@ class Constants{
         e: 4,
         f: 5,
         g: 6,
-        h: 7,
+        h: 7
     };
 
-    public static readonly COLUMNS_TO_LETTERS = [ "a", "b", "c",  "d", "e",  "f", "g",  "h"];
-
-    public static readonly WHITE_TURN = "\nWhite's turn\n";
-
-    public static readonly BLACK_TURN = "\nBlack's turn\n";
-
-
-    public static readonly INTRODUCTION  = "Hi there! Lets start the game and "+
-    "first will be white's turn. "
-
-    
-    public static readonly ASKING_FOR_A_MOVE = "What do you want to do? "
-    + "\nEXAMPLE OF MOVE A3B4, U( EXAMPLE OF UNDO u1, UNDOING MOVE BY GIVING THEIR INDEX))"+
-    "\nIF YOU WANT TO EXIT ENTER E/e: ";
-
-
-    public static readonly ASKING_FOR_RECURSIVE_MOVE = "You have one more step do " 
-    + "it and it you do not want to make it enter N/n: "
-
+    public static readonly COLUMNS_TO_LETTERS = ["a", "b", "c", "d", "e", "f", "g", "h"];
 }
 
 export default Constants;

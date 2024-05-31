@@ -1,49 +1,44 @@
-import Move from './Move';
+// import Move from './Move';
 import Position from './Position';
-import Constants from './Constants';
+import Constants, { BoardConstants, Color, GameStatus } from './Constants';
 import Board from './Board';
 import Figure from './Figure';
 import Wornings from './Wornings';
+import Move from './Move';
 
 class Validations{
 
 
-    public static validPlace(row:number,column:number): boolean{
-        return column < Constants.COLUMNS && row < Constants.ROWS
+    public static isValidPlace(row:number,column:number): boolean{
+        return column < BoardConstants.COLUMNS && row < BoardConstants.ROWS
         && column >= 0 && row >= 0;
+    }
+
+    public static isValidPosition(userInput: string, board: Board): boolean{
+        if(userInput.length!==2) return false;
+        if(!this.isNumber(userInput.charAt(1))) return false;
+        let position = new Position(userInput);
+        let figure = board.getBoard()[position.getRow()][position.getColumn()];
+        let hasSameColor = false;
+        if(figure instanceof Figure){
+            hasSameColor = figure.getColor() === board.getWhosTurn();
+        }
+        return hasSameColor && this.isValidPlace(position.getRow(), position.getColumn());
     }
 
 
     public static placeIsEmpty(row: number,column: number, board: Board): boolean{
 
-        return board.getBoard()[row][column] === Constants.EMPTY_PLACE;
+        return board.getBoard()[row][column] === Color.EMPTY_PLACE;
         
     }
-
-
-    public static validMove(moveUsingLetters: string){
-
-        if(moveUsingLetters.length === Constants.MOVE_LENGTH){
-
-            let move = new Move(moveUsingLetters);
-
-            return move !== undefined && move.getDest() !== undefined 
-            && move.getStart() !== undefined && 
-                move.getStart().getColumn() !== undefined && move.getDest().getColumn() !== undefined 
-                && !isNaN(move.getStart().getRow()) && !isNaN(move.getDest().getRow());
-
-        }
-
-        return false;
-    }
-
 
 
     public static validMoveUndo( userChoice: string, board: Board, player: string ): boolean{
 
 
 
-        if(userChoice.length !== Constants.HISTORY_CHECK_LENGTH){
+        if(userChoice.length !== BoardConstants.HISTORY_CHECK_LENGTH){
 
             return false;
 
@@ -57,11 +52,11 @@ class Validations{
 
 
 
-        if(userChoice.charAt(0) !== 'u' ||
+        if(userChoice.charAt(0) !== GameStatus.UNDO ||
             !(Validations.isNumber(stepIndex) && (boardHistory.length >= parseInt(stepIndex)))){
 
             
-            console.log(Wornings.notValidHistoryReference());
+            // console.log(Wornings.notValidHistoryReference());
 
                 
             return false;
@@ -71,7 +66,10 @@ class Validations{
 
         let chosenBoard = board.getHistory().getBoardHistory()[parseInt(stepIndex)-1];
         
-        let move = new Move(Object.keys(board.getHistory().getSteps()[parseInt(stepIndex)-1])[0]);
+        let getMoveString = Object.keys(board.getHistory().getSteps()[parseInt(stepIndex)-1])[0];
+
+        let move = new Move
+        (new Position(getMoveString.substring(0,2)),new Position(getMoveString.substring(2,4)));
 
         let row = move.getStart().getRow();
 

@@ -1,9 +1,8 @@
 import Board from './Board';
 
 import { question } from 'readline-sync';
-import Constants from './Constants';
+import Constants, { Color, GameStatus } from './Constants';
 import HelpingFunctions from './HelpingFunctions';
-import Move from './Move';
 
 
 import Validations from './Validations';
@@ -14,125 +13,39 @@ import Position from './Position';
 
 class Game{
 
-
-
     private board: Board;
 
-    private player: string;
-
-
-
-    private reachablePositionsAfterEating: Position[];
-
-
     constructor(){
-
         this.board = new Board();
-
-        this.player =  Constants.WHITE;
-
-        this.reachablePositionsAfterEating = [];
-
     }
 
-
     play(){
-
-
-        console.log(Constants.INTRODUCTION);
-
-        let userChoice: string = Constants.EMPTY_PLACE;
-
-        let notValidAction = false;
-
-        let recursiveMove = false;
-
+        console.log(GameStatus.INTRODUCTION);
+        let userChoice: string = Color.EMPTY_PLACE;
         while(!this.board.end()){
-
-            console.log( this.board.toString( this.player ) );
-
+            let playerColor = this.board.getWhosTurn();
+            console.log( this.board.toString());
             HelpingFunctions.printSteps(this.board);
+            HelpingFunctions.getTurn(playerColor);
+            userChoice = question(GameStatus.GET_FIGUR_POSITION).toLowerCase().trim();
 
-
-            HelpingFunctions.getTurn(this.player);
-
-            
-            if(HelpingFunctions.reachablePositionsExists(this.reachablePositionsAfterEating)){
-
-
-                userChoice = question(Constants.ASKING_FOR_RECURSIVE_MOVE ).toLocaleLowerCase().trim();
-
-
-                recursiveMove = this.reachablePositionsAfterEating.some((pos) =>
-                    { return pos.toString() === userChoice.substring(2, userChoice.length)})
-
-
-            }else{
-
-                userChoice = question(Constants.ASKING_FOR_A_MOVE);
-
-            }
-
-
-            this.reachablePositionsAfterEating = [];
-
-            userChoice = userChoice.toLocaleLowerCase().trim();
-
-            notValidAction = true;
-
-
-            if(userChoice === Constants.EXIT){
-
+            if(userChoice === GameStatus.EXIT){
                 break;
-            
             }
-            else if(userChoice === Constants.NO_MOVE){
-
-                this.player = HelpingFunctions.changePlayer(this.player);
-                
-            }
-            else if(Validations.validMoveUndo(userChoice, this.board, this.player) ){
-
+            else if(Validations.validMoveUndo(userChoice, this.board, playerColor)){
                 HelpingFunctions.undoMove(userChoice, this.board);
-
-
             }
-            else if(!Validations.validMove(userChoice)){
-
-                Wornings.notValidPosition();
-
-                                    
+            else if(Validations.isValidPosition(userChoice, this.board)){
+                let isValidMove = HelpingFunctions.performMove(this.board, userChoice);
+                if(isValidMove) this.board.changeTurn();
             }else{
-
-                if(recursiveMove || HelpingFunctions.possibleMove
-                    (this.board, userChoice, false,  this.player)){
-
-                    this.reachablePositionsAfterEating = Move.move(userChoice, this.board);
-
-                    notValidAction = false;
-
-                }else{
-
-                    Wornings.notValidMove();
-
-                }
-
+                Wornings.notValidPosition();
             }
 
-
-            if((!HelpingFunctions.reachablePositionsExists(this.reachablePositionsAfterEating))
-                && (!notValidAction)){
-
-                this.player = HelpingFunctions.changePlayer(this.player);
-
-            }
-
-
-            recursiveMove = false;
-
+            
         }
 
-        HelpingFunctions.finalWordsToSayToPlayers(userChoice, this.player);
+        HelpingFunctions.finalWordsToSayToPlayers(userChoice, this.board.getWhosTurn());
 
     }
 

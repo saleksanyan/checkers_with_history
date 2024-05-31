@@ -2,229 +2,101 @@ import Figure from "./Figure";
 import Validations from "./Validations";
 import Position from "./Position";
 
-import Constants from './Constants';
+import { Color } from './Constants';
 import Board from "./Board";
 import HelpingFunctions from "./HelpingFunctions";
 import Wornings from './Wornings';
+import Move from "./Move";
 
 
 class Queen extends Figure{
 
-
-
-
-    constructor(color: string ){
-        super(color);
+    constructor(color: string, position: Position ){
+        super(color, position);
     }
 
-    
+    reachablePositions(board: Board, moves: Move[]): Position[] {
+        let visited = new Array(8).fill(null).map(() => new Array(8).fill(false));
+        return this.allDestinations(this.currentPosition, board, false, [], moves, visited);
+    }
 
 
+    allDestinations(position: Position, board: Board, afterEating: boolean, 
+        allDestinations: Position[], moves: Move[], visited: boolean[][]): Position[] {
 
-    reachablePositions(position: Position, board: Board, afterEating: boolean): Position[] {
-        
-        if(!(this instanceof Queen))
-        {
+        if (!(this instanceof Queen)) {
             console.log(Wornings.notValidFigure());
             return [];
         }
-
-        let row = position.getRow();
-        let column = position.getColumn();
-        let reachablePositions: Position[] = [];
-
-
-        let reachableLeftRow = row-1, reachableLeftColumn = column-1;
-        let reachableRightRow = row-1, reachableRightColumn = 1+column;
-
-        let reachableLeftDownRow = 1+row, reachableLeftDownColumn = column-1;
-        let reachableRightDownRow = 1+row, reachableRightDownColumn = 1+column;
-        
-        let leftIsCaptured = false, rightIsCaptured = false;
-        let leftDownIsCaptured = false, rightDownIsCaptured = false;
-
-        let leftAfterEating = false, rightAfterEating = false;
-        let leftDownAfterEating = false, rightDownAfterEating = false;
-
-        let leftSameColorFigure = false, rightSameColorFigure = false;
-        let leftDownSameColorFigure = false, rightDownSameColorFigure = false;
-
-        while(Validations.validPlace(reachableLeftRow, reachableLeftColumn) || 
-            Validations.validPlace(reachableRightRow, reachableRightColumn) ||
-            Validations.validPlace(reachableLeftDownRow, reachableLeftDownColumn) ||
-            Validations.validPlace(reachableRightDownRow, reachableRightDownColumn)){
-
-                if(Validations.validPlace(reachableLeftRow, reachableLeftColumn) 
-                    && !leftSameColorFigure){
-                    
-
-                    if(leftIsCaptured && Validations.placeIsEmpty
-                        (reachableLeftRow, reachableLeftColumn, board)){
-                        leftIsCaptured = false;
-                    }
-
-
-                    if(!Validations.placeIsEmpty(reachableLeftRow, reachableLeftColumn, board)){
-
-                        let figure = board.getBoard()[reachableLeftRow][reachableLeftColumn];
-
-
-                        if(figure instanceof Figure){
-
-                            if(this.hasOppositeColor(figure)){
-
-                                leftIsCaptured = true;
-                                leftAfterEating = true;
-
-                            }else{
-
-                                leftSameColorFigure = true;
-
-                            }
-                        }
-                    }
-                    else if(!leftIsCaptured && (!afterEating || leftAfterEating)){
-                        
-
-
-                        HelpingFunctions.addingPositionToArray( 
-                            reachableLeftRow, reachableLeftColumn, reachablePositions
-                        );
-                    
-                    }
-                }
-                if(Validations.validPlace(reachableRightRow, reachableRightColumn)
-                     && !rightSameColorFigure){
-
-                    if(rightIsCaptured && Validations.placeIsEmpty
-                        (reachableRightRow, reachableRightColumn, board)){
-                        
-                        rightIsCaptured = false;
-
-                    }
-
-                    if(!Validations.placeIsEmpty(reachableRightRow, reachableRightColumn, board)){
-
-                        let figure = board.getBoard()[reachableRightRow][reachableRightColumn];
-
-
-                        if(figure instanceof Figure){
-
-                            if(this.hasOppositeColor(figure)){
-
-                                rightIsCaptured = true;
-                                rightAfterEating = true;
-                            }else{
-
-                                rightSameColorFigure = true;
-
-                            }
-                        }
-                    
-                    }
-                    else if (!rightIsCaptured && (!afterEating || rightAfterEating) ){
-
-                        HelpingFunctions.addingPositionToArray( 
-                            reachableRightRow, reachableRightColumn, reachablePositions
-                        );
-
-                    }
-                }
-                if(Validations.validPlace(reachableLeftDownRow, reachableLeftDownColumn) 
-                    && !leftDownSameColorFigure){
-
-                    if(leftDownIsCaptured && Validations.placeIsEmpty
-                        (reachableLeftDownRow, reachableLeftDownColumn, board)){
-                        
-                        leftDownIsCaptured = false;
-
-                    }
-
-                    if(!Validations.placeIsEmpty
-                        (reachableLeftDownRow, reachableLeftDownColumn, board)){
-                        
-                        let figure = board.getBoard()[reachableLeftDownRow][reachableLeftDownColumn];
-
-                        if(figure instanceof Figure){
-
-                            if(this.hasOppositeColor(figure)){
-
-                                leftDownIsCaptured = true;
-                                leftDownAfterEating = true;
-                            }else{
-
-                                leftDownSameColorFigure = true;
-
-                            }
-                        }
-
-                    }
-                    else if(!leftDownIsCaptured && (!afterEating || leftDownAfterEating)){
-
-                        HelpingFunctions.addingPositionToArray( 
-                            reachableLeftDownRow, reachableLeftDownColumn, reachablePositions
-                        );
-
-                    }
-                }
-                if(Validations.validPlace(reachableRightDownRow, reachableRightDownColumn) 
-                    && !rightDownSameColorFigure){
-
-                    if(rightDownIsCaptured && Validations.placeIsEmpty
-                        (reachableRightDownRow, reachableRightDownColumn, board)){
-                        
-                        rightDownIsCaptured = false;
-
-                    }
-
-                    if(!Validations.placeIsEmpty
-                        (reachableRightDownRow, reachableRightDownColumn, board)){
-                        
-                        let figure = board.getBoard()[reachableRightDownRow][reachableRightDownColumn];
-
-
-                        if(figure instanceof Figure){
-
-                            if(this.hasOppositeColor(figure)){
+        const directions = [
+            { rowChange: -1, colChange: -1 },
+            { rowChange: -1, colChange: 1 },
+            { rowChange: 1, colChange: -1 },
+            { rowChange: 1, colChange: 1 }
+        ];
+        for (const { rowChange, colChange } of directions) {
+            let row = position.getRow() + rowChange;
+            let column = position.getColumn() + colChange;
+            let isCaptured = false;
+            let afterEatingFlag = false;
+            let sameColorFigure = false;
+            let eatablePositions: number[] = [];
             
-                                rightDownIsCaptured = true;
+            while (Validations.isValidPlace(row, column)) {
+                let backToSamePosition = (this.currentPosition.getColumn() === column
+                && this.currentPosition.getRow() === row);
+                if (!sameColorFigure) {
 
-                                rightDownAfterEating = true;
-                            }else{
-
-                                rightDownSameColorFigure = true;
-
+                    if (isCaptured && (Validations.placeIsEmpty(row, column, board) 
+                        || backToSamePosition)) {
+                        isCaptured = false;
+                    }
+                    if (!visited[row][column] && !Validations.placeIsEmpty(row, column, board)
+                        && !backToSamePosition) {
+                        const figure = board.getBoard()[row][column];
+                        if (figure instanceof Figure) {
+                            if (this.hasOppositeColor(figure)) {
+                                isCaptured = true;
+                                afterEatingFlag = true;
+                                eatablePositions = [row,column];
+                            } else if(!(this.currentPosition.getColumn() === column
+                                && this.currentPosition.getRow() === row)){
+                                sameColorFigure = true;
                             }
                         }
-
-                    }
-                    else if(!rightDownIsCaptured && (!afterEating || rightDownAfterEating)){
-
-                        HelpingFunctions.addingPositionToArray( 
-                            reachableRightDownRow, reachableRightDownColumn, reachablePositions
-                        );
-
+                    }else if (!isCaptured && (!afterEating || afterEatingFlag)) {
+                        if (afterEatingFlag && !visited[row][column]) {
+                            visited[row][column] = true;
+                            let nextPos = HelpingFunctions.
+                            addingPositionToArray(row, column, allDestinations);
+                            moves.push(new Move(position, nextPos));
+                            let eatableFigureRow = eatablePositions[0];
+                            let eatableFigureColumn = eatablePositions[1];
+                            visited[eatableFigureRow][eatableFigureColumn] = true;
+                            this.allDestinations(nextPos, board, true, allDestinations, moves, visited);
+                            visited[row][column] = false;
+                            afterEatingFlag = false;
+                        } else if (!visited[row][column]) {
+                            HelpingFunctions.addingPositionToArray(row, column, allDestinations);
+                            moves.push(new Move(position, new Position
+                                (Position.getPositionUsingBoardPlaces(row, column))));
+                        }
+                        afterEatingFlag = false;
+                        visited[row][column] = true;
                     }
                 }
-
-                reachableLeftRow--, reachableLeftColumn--;
-
-                reachableRightRow--, reachableRightColumn++;
-
-                reachableLeftDownRow++, reachableLeftDownColumn--;
-
-                reachableRightDownRow++, reachableRightDownColumn++;
-
-
+                row += rowChange;
+                column += colChange;
+            }
         }
-
-        return reachablePositions;
-
+        return allDestinations;
     }
 
+        
     
+
     toString(){
-        if(this.getColor() === Constants.BLACK) return '🟥';
+        if(this.getColor() === Color.BLACK) return '🟥';
         return "⬜️";
     }
 

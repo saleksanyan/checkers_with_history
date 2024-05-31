@@ -1,25 +1,92 @@
 import Position from "./Position";
 import Validations from "./Validations";
 import Board from './Board';
-import Constants from "./Constants";
+import Constants, { BoardConstants, Color, GameStatus } from "./Constants";
 import Figure from "./Figure";
-import Pown from "./Pown";
-import Move from "./Move";
+import Pawn from "./Pawn";
 import Queen from "./Queen";
+import Move from "./Move";
+import { question } from 'readline-sync';
+import Wornings from "./Wornings";
 
 
 
 class HelpingFunctions{
 
+    public static performMove(board: Board, userChoice: string): boolean{
+        let position = new Position(userChoice);
+        let wasMoved = false;
+        let figure = board.getBoard()[position.getRow()][position.getColumn()];
+        if(figure instanceof Figure){
+            let moves: Move[] = []
+            let reachablePositions = figure.reachablePositions(board, moves);
+            console.log(reachablePositions);
+            userChoice = question(GameStatus.GET_NEXT_STEP);
+            let nextStep = new Position(userChoice);
+            debugger;
+            wasMoved = figure.move(nextStep, reachablePositions, moves, board);
+            if(!wasMoved){
+                Wornings.notValidMove();
+            }
+        }
+        return wasMoved;
+    }
 
+
+    public static findPath(reachableMoves: Move[], nextPosition: Position, currentPosition: Position): Move[]{
+        let startIndex: number = 0;
+        let endIndex: number = 0;
+
+        for (let positionIndex = 0; positionIndex < reachableMoves.length; positionIndex++) {
+            let pos = reachableMoves[positionIndex];
+
+            if(pos.getDest().getColumn() === nextPosition.getColumn() 
+                && pos.getDest().getRow() === nextPosition.getRow()){
+            
+                    break;
+            
+            }
+            endIndex++;
+        }
+        startIndex = endIndex;
+        for (let positionIndex = endIndex; positionIndex >= 0; positionIndex--) {
+            let pos = reachableMoves[positionIndex];
+            if(pos.getStart().getColumn() === currentPosition.getColumn() 
+                && pos.getStart().getRow() === currentPosition.getRow()){
+        
+                    break;
+            
+            }
+            startIndex--;
+        }
+
+        return reachableMoves.slice(startIndex, ( endIndex+1));
+
+    }
+
+
+
+    public static isReachablePosition(position: Position, reachablePositions: Position[]){
+        return reachablePositions.some((pos) =>
+            pos.getColumn() === position.getColumn() && pos.getRow() === position.getRow()
+        ) 
+    }
+
+
+
+    public static wasNotRepeatedStap(allDestinations: Position[], figuresNewRow: number,
+        figuresNewColumn: number): boolean{
+        return !allDestinations.some((pos) =>
+        pos.getColumn() === figuresNewColumn && pos.getRow() === figuresNewRow
+    )
+    }
     public static addingPositionToArray(figuresNewRow: number, 
-        figuresNewColumn: number, reachablePositions: Position[]) {
+        figuresNewColumn: number, reachablePositions: Position[]): Position {
 
-
-        let pos = Position.getPositionUsingBoardPlaces(figuresNewColumn, figuresNewRow);
+        let pos = Position.getPositionUsingBoardPlaces(figuresNewRow, figuresNewColumn);
         let destPosition = new Position(pos);
         reachablePositions.push(destPosition);
-
+        return new Position(pos);
 
     }
 
@@ -45,7 +112,7 @@ class HelpingFunctions{
 
                 eat = true;
 
-                board.getBoard()[startRow][startColumn] = Constants.EMPTY_PLACE;
+                board.getBoard()[startRow][startColumn] = Color.EMPTY_PLACE;
             
             }
         }
@@ -61,7 +128,7 @@ class HelpingFunctions{
 
                 eat = true;
 
-                board.getBoard()[startRow][startColumn] = Constants.EMPTY_PLACE;
+                board.getBoard()[startRow][startColumn] = Color.EMPTY_PLACE;
             
             }
                
@@ -79,7 +146,7 @@ class HelpingFunctions{
 
                 eat = true;
 
-                board.getBoard()[startRow][startColumn] = Constants.EMPTY_PLACE;
+                board.getBoard()[startRow][startColumn] = Color.EMPTY_PLACE;
             
             }
         }
@@ -96,7 +163,7 @@ class HelpingFunctions{
 
                 eat = true;
 
-                board.getBoard()[startRow][startColumn] = Constants.EMPTY_PLACE;
+                board.getBoard()[startRow][startColumn] = Color.EMPTY_PLACE;
             
             }
         }
@@ -112,7 +179,7 @@ class HelpingFunctions{
 
         if(figure instanceof Figure){
 
-            if(figure.getColor() === Constants.BLACK){
+            if(figure.getColor() === Color.BLACK){
 
                 board.decrementBlackCounter();
                 
@@ -135,16 +202,16 @@ class HelpingFunctions{
 
         let checkersBoard = board.getBoard()
 
-        for (let row = 0; row < Constants.ROWS; row++) {
+        for (let row = 0; row < BoardConstants.ROWS; row++) {
 
 
-            for (let column = 0; column < Constants.COLUMNS; column++) {
+            for (let column = 0; column < BoardConstants.COLUMNS; column++) {
                 
                 let figure = checkersBoard[row][column];
 
                 if(figure instanceof Figure){
 
-                    if(figure.getColor() === Constants.BLACK){
+                    if(figure.getColor() === Color.BLACK){
 
                         blacks++;
                         
@@ -172,22 +239,24 @@ class HelpingFunctions{
 
     public static constructBoard( boardMatrix: (Figure | string)[][]){
         
-        for (let row = 0; row < Constants.ROWS; row++) {
-            for (let column = 0; column < Constants.COLUMNS; column++) {
+        for (let row = 0; row < BoardConstants.ROWS; row++) {
+            for (let column = 0; column < BoardConstants.COLUMNS; column++) {
 
                 if(( row+column ) % 2 !== 0 && row < 3){
 
-                    boardMatrix[row][column] = new Pown( Constants.BLACK);
+                    boardMatrix[row][column] = new Pawn( Color.BLACK,
+                         new Position(Position.getPositionUsingBoardPlaces(row,column)));
 
                 }
                 else if(( row+column ) % 2 !== 0 && row > 4 ){
 
-                    boardMatrix[row][column] = new Pown( Constants.WHITE );
+                    boardMatrix[row][column] = new Pawn( Color.WHITE, 
+                        new Position(Position.getPositionUsingBoardPlaces(row,column)));
 
                 }
                 else{
 
-                    boardMatrix[row][column] = Constants.EMPTY_PLACE;
+                    boardMatrix[row][column] = Color.EMPTY_PLACE;
 
                 }
 
@@ -201,52 +270,14 @@ class HelpingFunctions{
     public static getTurn(player: string){
 
 
-        if(player === Constants.WHITE){
+        if(player === Color.WHITE){
         
-            console.log( Constants.WHITE_TURN );
+            console.log( GameStatus.WHITE_TURN );
         
         }
         
-        else{ console.log( Constants.BLACK_TURN ); }
+        else{ console.log( GameStatus.BLACK_TURN ); }
     }
-
-
-
-
-
-    public static possibleMove(board: Board, move: string, afterEating: boolean, playerColor: string): boolean{
-
-        let m = new Move(move);
-
-        let start = m.getStart();
-
-        let dest = m.getDest();
-
-        let checkerboard = board.getBoard();
-
-        let figure = checkerboard[start.getRow()][start.getColumn()];
-
-        let reachablePositions: Position[] = [];
-
-        if(figure instanceof Figure){
-
-            if(figure.getColor() === playerColor){
-
-                reachablePositions = figure.reachablePositions(start, board, afterEating);
-            
-            }else return false;
-
-        }
-
-        let canMoveToGivenPos = reachablePositions.some((pos) =>
-            { return pos.getRow() === dest.getRow() && pos.getColumn() === dest.getColumn()})
-
-
-        return canMoveToGivenPos;
-
-    }
-
-
 
 
     public static becomeQueen(row: number, column: number, board: Board){
@@ -254,19 +285,20 @@ class HelpingFunctions{
         let figure = boardPlate[row][column];
 
 
-        if(!(figure instanceof Pown)){
+        if(!(figure instanceof Pawn)){
             return;
         }
-        if( row !== 0 && figure.getColor() === Constants.WHITE ) {
+        if( row !== 0 && figure.getColor() === Color.WHITE ) {
 
             return;
 
-        }else if(figure.getColor() === Constants.BLACK && row!==7){
+        }else if(figure.getColor() === Color.BLACK && row!==7){
 
             return;
         }
 
-        boardPlate[row][column] = new Queen( figure.getColor() );
+        boardPlate[row][column] = new Queen( figure.getColor(), 
+        new Position(Position.getPositionUsingBoardPlaces(row,column)));
     }
 
 
@@ -278,7 +310,7 @@ class HelpingFunctions{
    
         boardPlate[newRow][newColumn] = temp;
    
-        boardPlate[row][column] = Constants.EMPTY_PLACE;
+        boardPlate[row][column] = Color.EMPTY_PLACE;
    
         HelpingFunctions.becomeQueen(newRow,newColumn, board);
 
@@ -306,60 +338,38 @@ class HelpingFunctions{
 
     }
 
-    public static deepCopyMatrix(matrix: (Figure | string)[][]): (Figure | string)[][] {
-        return matrix.map(row => row.map(item => {
-            if (item instanceof Figure) {
-            
-                return item as Figure;
-
-            } else {
-
+    public static deepCopyMatrix(board: (Figure | Color.EMPTY_PLACE)[][]): (Figure | Color.EMPTY_PLACE)[][] {
+        // let currentBoardCopy = new Board;
+        // currentBoardCopy.setWhosTurn(board.getWhosTurn());
+        // currentBoardCopy.setWhiteCount(board.getWhiteCounter());
+        // currentBoardCopy.setBlackCount(board.getBlackCounter());
+        return board.map(row => row.map(item => {
+            if (item instanceof Queen) {
+                return new Queen(item.getColor(), item.getCurrentPosition());
+            }else if(item instanceof Pawn) {
+                return new Pawn(item.getColor(), item.getCurrentPosition());
+            }else {
                 return item;
-            
             }
         }));
+
     }
 
-
-
-    public static changePlayer(player: string): string {
-        return (player === Constants.WHITE) ? Constants.BLACK : Constants.WHITE;
-    }
-    
 
     public static finalWordsToSayToPlayers(userChoice: string, player: string): void {
-
-
         if (userChoice.length === 1) {
-
-            console.log(Constants.BYE);
-
+            console.log(GameStatus.BYE);
         }
-        else if (player === Constants.WHITE) {
-
-            console.log(Constants.BlACK_WON);
-
+        else if (player === Color.WHITE) {
+            console.log(GameStatus.BLACK_WON);
         }
         else {
-
-            console.log(Constants.WHITE_WON);
-
+            console.log(GameStatus.WHITE_WON);
         }
-
     }
-
-
-    public static reachablePositionsExists(reachablePositionsAfterEating: Position[]): boolean {
-
-        return reachablePositionsAfterEating.length !== 0;
-   
-    }
-
 
     public static printSteps(board: Board){
-
-        console.log(board.getHistory().showStepHistry());
-
+        console.log(board.getHistory().showStepHistory());
     }
 
 
