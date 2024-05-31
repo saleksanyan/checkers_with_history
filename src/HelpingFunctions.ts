@@ -23,7 +23,6 @@ class HelpingFunctions{
             console.log(reachablePositions);
             userChoice = question(GameStatus.GET_NEXT_STEP);
             let nextStep = new Position(userChoice);
-            debugger;
             wasMoved = figure.move(nextStep, reachablePositions, moves, board);
             if(!wasMoved){
                 Wornings.notValidMove();
@@ -241,7 +240,6 @@ class HelpingFunctions{
         
         for (let row = 0; row < BoardConstants.ROWS; row++) {
             for (let column = 0; column < BoardConstants.COLUMNS; column++) {
-debugger;
                 if(( row+column ) % 2 !== 0 && row < (BoardConstants.ROWS-2)/2){
 
                     boardMatrix[row][column] = new Pawn( Color.BLACK,

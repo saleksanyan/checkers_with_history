@@ -47,6 +47,7 @@ class Queen extends Figure{
                 let backToSamePosition = (this.currentPosition.getColumn() === column
                 && this.currentPosition.getRow() === row);
                 if (!sameColorFigure) {
+                    console.log(isCaptured+ " " +row +" "+ column);
 
                     if (isCaptured && (Validations.placeIsEmpty(row, column, board) 
                         || backToSamePosition)) {
@@ -56,17 +57,25 @@ class Queen extends Figure{
                         && !backToSamePosition) {
                         const figure = board.getBoard()[row][column];
                         if (figure instanceof Figure) {
-                            if (this.hasOppositeColor(figure)) {
+
+                            if (!isCaptured && 
+                                !visited[row][column] && this.hasOppositeColor(figure)) {
                                 isCaptured = true;
                                 afterEatingFlag = true;
                                 eatablePositions = [row,column];
                             } else if(!(this.currentPosition.getColumn() === column
-                                && this.currentPosition.getRow() === row)){
+                                && this.currentPosition.getRow() === row) 
+                                && !this.hasOppositeColor(figure)){
                                 sameColorFigure = true;
                             }
+                            else if(isCaptured && this.hasOppositeColor(figure)){
+                                visited[row][column] = true;
+                                break;
+                            }
+
                         }
                     }else if (!isCaptured && (!afterEating || afterEatingFlag)) {
-                        if (afterEatingFlag && !visited[row][column]) {
+                        if (afterEatingFlag && !visited[row][column]){
                             visited[row][column] = true;
                             let nextPos = HelpingFunctions.
                             addingPositionToArray(row, column, allDestinations);
@@ -74,7 +83,8 @@ class Queen extends Figure{
                             let eatableFigureRow = eatablePositions[0];
                             let eatableFigureColumn = eatablePositions[1];
                             visited[eatableFigureRow][eatableFigureColumn] = true;
-                            this.allDestinations(nextPos, board, true, allDestinations, moves, visited);
+                            this.allDestinations
+                            (nextPos, board, true, allDestinations, moves, visited);
                             visited[row][column] = false;
                             afterEatingFlag = false;
                         } else if (!visited[row][column]) {
