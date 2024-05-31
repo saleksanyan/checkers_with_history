@@ -1,7 +1,7 @@
 import Figure from './Figure';
 import HelpingFunctions from './HelpingFunctions';
 import History from './History';
-import { Color } from './Constants';
+import Constants, { BoardConstants, Color } from './Constants';
 
 
 class Board{
@@ -14,12 +14,13 @@ class Board{
     private whosTurn: string;
 
     constructor(){
-        this.matrix = [[],[],[],[],[],[],[],[]];
+        this.matrix = new Array(BoardConstants.ROWS).fill(
+            null).map(() => new Array(BoardConstants.COLUMNS));
         this.history = new History();
         HelpingFunctions.constructBoard(this.matrix);
         this.whosTurn = Color.WHITE;
-        this.blackCounter = 12;
-        this.whiteCounter = 12;
+        this.blackCounter = BoardConstants.PAWN_COUNT;
+        this.whiteCounter = BoardConstants.PAWN_COUNT;
     }
 
     decrementWhiteCounter(){
@@ -78,35 +79,38 @@ class Board{
     }
 
     toString(){
-        let board = '\n___________________________________________\n';
-        // if(this.getWhosTurn() === Color.WHITE){
-            for (let row = 0; row < this.matrix.length; row++) {
-                
-                board+= ' '+(8-row)+' | ';
-                for (let column = 0; column < this.matrix.length; column++) {
-                    if(this.matrix[row][column] === ' '){
-                        board += '  '+' | ';
-                    }else{
-                        board += this.matrix[row][column]+' | ';
-                    }
+
+        let board = '\n';
+        for (let index = 0; index < (BoardConstants.COLUMNS * 6 - 4); index++) {
+            board += '_';   
+        }
+        board += '\n';
+        for (let row = 0; row < this.matrix.length; row++) {
+            let rowNumber = BoardConstants.ROWS-row;
+            board+= ' '+rowNumber+' | ';
+            
+            for (let column = 0; column < this.matrix.length; column++) {
+                if(this.matrix[row][column] === ' '){
+                    board += '  '+' | ';
+                }else{
+                    board += this.matrix[row][column]+' | ';
                 }
-                board += '\n___________________________________________\n';
             }
-        // }else{
-        //     for (let row = this.matrix.length-1; row >= 0 ; row--) {
-                
-        //         board+= ' '+(8-row)+' | ';
-        //         for (let column = 0; column < this.matrix.length; column++) {
-        //             if(this.matrix[row][column] === ' '){
-        //                 board += '  '+' | ';
-        //             }else{
-        //                 board += this.matrix[row][column]+' | ';
-        //             }
-        //         }
-        //         board += '\n___________________________________________\n';
-        //     }
-        // }
-        board+= '     A    B    C    D    E    F    G    H\n';
+
+            board+= '\n';
+            for (let index = 0; index < (BoardConstants.COLUMNS * 6 - 4); index++) {
+                board += '_';   
+            }
+            board += '\n';
+        
+        }
+        board+= "     ";
+        let letters = Constants.COLUMNS_TO_LETTERS;
+        for (let index = 0; index < BoardConstants.COLUMNS; index++) {
+            board += letters[index].toUpperCase() + "    ";
+            
+        }
+        board+= '\n';
         return board;
     }
 

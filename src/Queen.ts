@@ -2,7 +2,7 @@ import Figure from "./Figure";
 import Validations from "./Validations";
 import Position from "./Position";
 
-import { Color } from './Constants';
+import { BoardConstants, Color } from './Constants';
 import Board from "./Board";
 import HelpingFunctions from "./HelpingFunctions";
 import Wornings from './Wornings';
@@ -16,7 +16,8 @@ class Queen extends Figure{
     }
 
     reachablePositions(board: Board, moves: Move[]): Position[] {
-        let visited = new Array(8).fill(null).map(() => new Array(8).fill(false));
+        let visited = new Array(BoardConstants.ROWS).fill(
+            null).map(() => new Array(BoardConstants.COLUMNS).fill(false));
         return this.allDestinations(this.currentPosition, board, false, [], moves, visited);
     }
 

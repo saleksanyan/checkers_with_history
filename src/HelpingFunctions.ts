@@ -241,14 +241,14 @@ class HelpingFunctions{
         
         for (let row = 0; row < BoardConstants.ROWS; row++) {
             for (let column = 0; column < BoardConstants.COLUMNS; column++) {
-
-                if(( row+column ) % 2 !== 0 && row < 3){
+debugger;
+                if(( row+column ) % 2 !== 0 && row < (BoardConstants.ROWS-2)/2){
 
                     boardMatrix[row][column] = new Pawn( Color.BLACK,
-                         new Position(Position.getPositionUsingBoardPlaces(row,column)));
+                        new Position(Position.getPositionUsingBoardPlaces(row,column)));
 
                 }
-                else if(( row+column ) % 2 !== 0 && row > 4 ){
+                else if(( row+column ) % 2 !== 0 && row > (BoardConstants.ROWS)/2 ){
 
                     boardMatrix[row][column] = new Pawn( Color.WHITE, 
                         new Position(Position.getPositionUsingBoardPlaces(row,column)));
@@ -339,10 +339,6 @@ class HelpingFunctions{
     }
 
     public static deepCopyMatrix(board: (Figure | Color.EMPTY_PLACE)[][]): (Figure | Color.EMPTY_PLACE)[][] {
-        // let currentBoardCopy = new Board;
-        // currentBoardCopy.setWhosTurn(board.getWhosTurn());
-        // currentBoardCopy.setWhiteCount(board.getWhiteCounter());
-        // currentBoardCopy.setBlackCount(board.getBlackCounter());
         return board.map(row => row.map(item => {
             if (item instanceof Queen) {
                 return new Queen(item.getColor(), item.getCurrentPosition());

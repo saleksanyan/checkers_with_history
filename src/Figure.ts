@@ -6,7 +6,6 @@ import Move from './Move';
 
 abstract class Figure{
 
-
     protected color: string;
     protected currentPosition: Position;
     

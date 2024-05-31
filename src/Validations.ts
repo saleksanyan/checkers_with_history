@@ -1,4 +1,3 @@
-// import Move from './Move';
 import Position from './Position';
 import Constants, { BoardConstants, Color, GameStatus } from './Constants';
 import Board from './Board';
@@ -7,7 +6,6 @@ import Wornings from './Wornings';
 import Move from './Move';
 
 class Validations{
-
 
     public static isValidPlace(row:number,column:number): boolean{
         return column < BoardConstants.COLUMNS && row < BoardConstants.ROWS

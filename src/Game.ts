@@ -12,7 +12,6 @@ import Position from './Position';
 
 
 class Game{
-
     private board: Board;
 
     constructor(){

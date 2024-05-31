@@ -22,6 +22,7 @@ export enum BoardConstants {
 	ROWS = 8,
 	MOVE_LENGTH = 4,
 	HISTORY_CHECK_LENGTH = 2,
+	PAWN_COUNT = 12
 }
 
 export class Constants {
@@ -37,7 +38,7 @@ export class Constants {
         e: 4,
         f: 5,
         g: 6,
-        h: 7
+        h: 7,		
     };
 
     public static readonly COLUMNS_TO_LETTERS = ["a", "b", "c", "d", "e", "f", "g", "h"];

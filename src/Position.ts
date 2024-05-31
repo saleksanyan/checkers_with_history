@@ -1,4 +1,4 @@
-import Constants from './Constants';
+import Constants, { BoardConstants } from './Constants';
 
 
 class Position{
@@ -37,11 +37,11 @@ class Position{
     }
 
     public static getPositionUsingBoardPlaces(row: number, column: number): string{
-        return Constants.COLUMNS_TO_LETTERS[ column ] + ( 8 - row);
+        return Constants.COLUMNS_TO_LETTERS[ column ] + ( BoardConstants.ROWS - row);
     }
 
     toString(): string{
-        return Constants.COLUMNS_TO_LETTERS[ this.column ] + ( 8 - this.row);
+        return Constants.COLUMNS_TO_LETTERS[ this.column ] + (  BoardConstants.ROWS - this.row);
     }
 }
 export default Position;
