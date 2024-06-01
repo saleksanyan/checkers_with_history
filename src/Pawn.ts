@@ -53,7 +53,9 @@ class Pawn extends Figure{
     
                 if (Validations.isValidPlace(eatableFigureRow, eatableFigureColumn)) {
                     if (Validations.placeIsEmpty
-                        (eatableFigureRow, eatableFigureColumn, board) && !afterEating) {
+                        (eatableFigureRow, eatableFigureColumn, board) && !afterEating 
+                        && Validations.notStepBack(this.getColor(), eatableFigureRow, 
+                        this.currentPosition)) {
                         HelpingFunctions.addingPositionToArray
                         (eatableFigureRow, eatableFigureColumn, allDestinations);
                         moves.push(new Move(position, new Position(Position.

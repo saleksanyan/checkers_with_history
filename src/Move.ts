@@ -23,11 +23,11 @@ class Move{
         this.dest.setColumn(newDest.getColumn());
     }
 
-
     setStart(newStart: Position){
         this.start.setRow(newStart.getRow());
         this.start.setColumn(newStart.getColumn());
     }
+    
     toString(){
         return `${this.start}${this.dest}`;
     }

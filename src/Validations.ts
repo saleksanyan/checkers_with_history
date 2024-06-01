@@ -32,6 +32,15 @@ class Validations{
     }
 
 
+    public static notStepBack(figurColor: string, row: number, currentPosition: Position){
+
+        if(figurColor === Color.WHITE){
+            return currentPosition.getRow()> row;
+        }
+        return currentPosition.getRow()< row;
+
+    }
+
     public static validMoveUndo( userChoice: string, board: Board, player: string ): boolean{
 
 
